@@ -6,7 +6,7 @@ Basta copiar o bloco de código abaixo, colar em um novo [Notebook do Google Col
 ---
 
 ## ⚡ O SUPER-COMBO (Configuração + Inicialização + Execução)
-Copie e cole este bloco inteiro. Ele vai preparar o ambiente, baixar os modelos e rodar o pipeline automaticamente.
+Copie e cole este bloco inteiro no seu Colab. Ele faz tudo sozinho!
 
 ```python
 # ==============================================================================
@@ -16,10 +16,11 @@ import os
 import time
 
 # --- PARÂMETROS DE EXECUÇÃO ---
+# @markdown ### Configurações do Vídeo
 MODO = "standard" # @param ["standard", "react"]
 VIDEO_INPUT = "video_original.mp4" # @param {type:"string"}
-IMAGEM_FUNDO = "fundo.jpg" # @param {type:"string"} (Apenas p/ modo React)
-IMAGEM_OVERLAY = "logo.png" # @param {type:"string"} (Apenas p/ modo React)
+IMAGEM_FUNDO = "fundo.jpg" # @param {type:"string"}
+IMAGEM_OVERLAY = "logo.png" # @param {type:"string"}
 
 def run_step(name, command):
     print(f"\n--- ⏳ INICIANDO: {name} ---")
@@ -36,40 +37,49 @@ run_step("Dependências do Sistema (FFmpeg/Chromium)", "sudo apt-get install -y 
 
 run_step("Bibliotecas Python GPU", "pip install onnxruntime-gpu vosk pydub rembg mediapipe moviepy opencv-python numpy Pillow")
 
-# 2. MODELO DE VOZ (VOSK)
-if not os.path.exists("model"):
-    run_step("Download Modelo Vosk PT-BR", "mkdir -p model && wget -q https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip && unzip -q vosk-model-small-pt-0.3.zip && mv vosk-model-small-pt-0.3/* model/ && rm -rf vosk-model-small-pt-0.3.zip vosk-model-small-pt-0.3")
+# 2. DOWNLOAD DO PROJETO E MODELO
+if not os.path.exists("SatiroAiKwai"):
+    run_step("Download do Código (GitHub)", "git clone https://github.com/noviso123/SatiroAiKwai.git")
+%cd SatiroAiKwai
 
-# 3. PREPARAÇÃO DO PROJETO
-if not os.path.exists("package.json"):
-    print("⚠️  AVISO: package.json não encontrado. Certifique-se de que o projeto foi carregado no diretório atual!")
-else:
-    run_step("Instalação node_modules", "npm install")
+if not os.path.exists("scripts/ai/model"):
+    run_step("Download Modelo Vosk PT-BR", "mkdir -p scripts/ai/model && wget -q https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip && unzip -q vosk-model-small-pt-0.3.zip && mv vosk-model-small-pt-0.3/* scripts/ai/model/ && rm -rf vosk-model-small-pt-0.3.zip vosk-model-small-pt-0.3")
+
+# 3. INSTALAÇÃO DE MÓDULOS
+if not os.path.exists("node_modules"):
+    run_step("Instalação node_modules (Remotion)", "npm install")
 
 # 4. EXECUÇÃO DO PIPELINE (GPU ACCELERATED)
 output_dir = "public/output"
 os.makedirs(output_dir, exist_ok=True)
 
-if MODO == "standard":
-    cmd_exec = f'python scripts/ai/orchestrator.py "{VIDEO_INPUT}" "{output_dir}" standard --gpu'
+# Garante que os arquivos de entrada existam antes de rodar
+if not os.path.exists(f"../{VIDEO_INPUT}"):
+    print(f"❌ ERRO: O arquivo '{VIDEO_INPUT}' não foi encontrado! Faça o upload dele na pasta raiz do Colab.")
 else:
-    cmd_exec = f'python scripts/ai/orchestrator.py "{VIDEO_INPUT}" "{output_dir}" react "{IMAGEM_FUNDO}" "{IMAGEM_OVERLAY}" --gpu'
+    # Ajusta caminho do input pois estamos dentro da pasta do projeto
+    input_path = f"../{VIDEO_INPUT}"
 
-run_step(f"Pipeline Satiro AI ({MODO})", cmd_exec)
+    if MODO == "standard":
+        cmd_exec = f'python scripts/ai/orchestrator.py "{input_path}" "{output_dir}" standard --gpu'
+    else:
+        cmd_exec = f'python scripts/ai/orchestrator.py "{input_path}" "{output_dir}" react "../{IMAGEM_FUNDO}" "../{IMAGEM_OVERLAY}" --gpu'
 
-# 5. FINALIZAÇÃO E DOWNLOAD
-run_step("Compactação de Resultados", "zip -r -q satiro_results.zip public/output/")
+    run_step(f"Pipeline Satiro AI ({MODO})", cmd_exec)
 
-from google.colab import files
-print("\n🎉 TUDO PRONTO! O download começará em instantes...")
-files.download('satiro_results.zip')
+    # 5. FINALIZAÇÃO E DOWNLOAD
+    run_step("Compactação de Resultados", "zip -r -q ../satiro_results.zip public/output/")
+
+    from google.colab import files
+    print("\n🎉 TUDO PRONTO! O download começará em instantes...")
+    files.download('../satiro_results.zip')
 ```
 
 ---
 
-## 📝 Dicas Importantes:
-1. **Upload de Arquivos:** Antes de rodar, clique no ícone de pasta 📂 à esquerda no Colab e arraste seus vídeos e imagens para lá.
-2. **GPU Ativada:** Vá em *Ambiente de Execução* > *Alterar tipo de ambiente de execução* e selecione **T4 GPU** (ou L4/A100) para velocidade máxima.
-3. **Persistência:** Se quiser salvar no seu Google Drive, adicione `from google.colab import drive; drive.mount('/content/drive')` no início do código.
+## 📝 Como rodar (Passo-a-Passo):
+1. **Ative a GPU:** Vá em *Ambiente de Execução* > *Alterar tipo de ambiente de execução* e selecione **T4 GPU**.
+2. **Suba seus arquivos:** Clique no ícone de pasta 📂 à esquerda e arraste seu vídeo (`video_original.mp4`) e imagens para lá (não coloque dentro de pastas).
+3. **Cole e Rode:** Cole o código acima em uma célula e aperte o botão de play.
 
-**Garantia:** Este código foi testado para ser 100% autônomo. Se os arquivos de entrada estiverem lá, o resultado sairá perfeito!
+**Guia de Cores:** O sistema vai te avisar de cada etapa com ícones e tempo de execução. Se faltar algum arquivo, ele vai te dar um alerta claro em vermelho!
