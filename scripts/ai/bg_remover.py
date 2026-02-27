@@ -73,10 +73,3 @@ if __name__ == "__main__":
 
     gpu_flag = "--gpu" in sys.argv
     remove_background(sys.argv[1], sys.argv[2], use_gpu=gpu_flag)
-
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python bg_remover.py <input_video> <output_video>")
-        sys.exit(1)
-
-    remove_background(sys.argv[1], sys.argv[2])

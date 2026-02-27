@@ -108,16 +108,3 @@ if __name__ == "__main__":
 
     gpu_flag = "--gpu" in sys.argv
     compose_react_pro(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], use_gpu=gpu_flag)
-
-    cap_fg.release()
-    if cap_bg: cap_bg.release()
-    out.release()
-
-    if os.path.exists(output_path): os.remove(output_path)
-    os.rename(temp_raw, output_path)
-    print(f"✅ Pro-React Composition Complete: {output_path}")
-
-if __name__ == "__main__":
-    if len(sys.argv) < 5:
-        sys.exit(1)
-    compose_react_pro(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])

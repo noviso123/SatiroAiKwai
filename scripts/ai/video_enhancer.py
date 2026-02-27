@@ -36,8 +36,3 @@ if __name__ == "__main__":
 
     gpu_flag = "--gpu" in sys.argv
     enhance_video(sys.argv[1], sys.argv[2], use_gpu=gpu_flag)
-
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        sys.exit(1)
-    enhance_video(sys.argv[1], sys.argv[2])
