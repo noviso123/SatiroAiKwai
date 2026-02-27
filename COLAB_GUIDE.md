@@ -56,25 +56,25 @@ output_dir = "public/output"
 os.makedirs(output_dir, exist_ok=True)
 
 # Garante que os arquivos de entrada existam antes de rodar
-if not os.path.exists(f"../{VIDEO_INPUT}"):
-    print(f"❌ ERRO: O arquivo '{VIDEO_INPUT}' não foi encontrado! Faça o upload dele na pasta raiz do Colab.")
-else:
-    # Ajusta caminho do input pois estamos dentro da pasta do projeto
-    input_path = f"../{VIDEO_INPUT}"
+input_realpath = os.path.join('/content', VIDEO_INPUT)
 
+if not os.path.exists(input_realpath):
+    print(f"❌ ERRO: O arquivo '{VIDEO_INPUT}' não foi encontrado na raiz do Colab!")
+    print(f"👉 Arraste o arquivo para a área de arquivos (abaixo de 'sample_data') e tente novamente.")
+else:
     if MODO == "standard":
-        cmd_exec = f'python scripts/ai/orchestrator.py "{input_path}" "{output_dir}" standard --gpu'
+        cmd_exec = f'python scripts/ai/orchestrator.py "{input_realpath}" "{output_dir}" standard --gpu'
     else:
-        cmd_exec = f'python scripts/ai/orchestrator.py "{input_path}" "{output_dir}" react "../{IMAGEM_FUNDO}" "../{IMAGEM_OVERLAY}" --gpu'
+        cmd_exec = f'python scripts/ai/orchestrator.py "{input_realpath}" "{output_dir}" react "/content/{IMAGEM_FUNDO}" "/content/{IMAGEM_OVERLAY}" --gpu'
 
     run_step(f"Pipeline Satiro AI ({MODO})", cmd_exec)
 
     # 5. FINALIZAÇÃO E DOWNLOAD
-    run_step("Compactação de Resultados", "zip -r -q ../satiro_results.zip public/output/")
+    run_step("Compactação de Resultados", "zip -r -q /content/satiro_results.zip public/output/")
 
     from google.colab import files
     print("\n🎉 TUDO PRONTO! O download começará em instantes...")
-    files.download('../satiro_results.zip')
+    files.download('/content/satiro_results.zip')
 ```
 
 ---
