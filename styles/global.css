@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08090a;
+  --foreground: #f8fafc;
+  --accent-cyan: #22d3ee;
+  --accent-orange: #f97316;
+  --accent-glow: rgba(34, 211, 238, 0.2);
+  --glass-bg: rgba(15, 23, 42, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --card-bg: #0f172a;
+  --card-border: #1e293b;
+
+  --geist-border-radius: 16px;
+  --geist-pad: 24px;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--geist-border-radius);
+}
+
+.premium-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--geist-border-radius);
+  transition: all 0.3s ease;
+}
+
+.premium-card:hover {
+  border-color: var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.accent-text {
+  background: linear-gradient(135deg, #fff 0%, #888 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-on-hover:hover {
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+@theme {
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --color-accent: var(--accent);
+  --color-card: var(--card-bg);
+  --radius-premium: var(--geist-border-radius);
+  --font-display: var(--font-display);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
