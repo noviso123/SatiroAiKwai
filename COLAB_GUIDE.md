@@ -47,7 +47,7 @@ if not os.path.exists("scripts/ai/model"):
 
 # 3. INSTALAÇÃO DE MÓDULOS
 if not os.path.exists("node_modules"):
-    run_step("Instalação node_modules (Remotion)", "npm install")
+    run_step("Instalação node_modules (Remotion)", "npm install --legacy-peer-deps")
 
 # 4. EXECUÇÃO DO PIPELINE (GPU ACCELERATED)
 output_dir = "public/output"
@@ -79,7 +79,7 @@ else:
 
 ## 📝 Como rodar (Passo-a-Passo):
 1. **Ative a GPU:** Vá em *Ambiente de Execução* > *Alterar tipo de ambiente de execução* e selecione **T4 GPU**.
-2. **Suba seus arquivos:** Clique no ícone de pasta 📂 à esquerda e arraste seu vídeo (`video_original.mp4`) e imagens para lá (não coloque dentro de pastas).
+2. **Suba seus arquivos:** Na barra lateral esquerda do Colab, clique no ícone de pasta (📂). **Arraste seu vídeo (`video_original.mp4`) para o espaço vazio abaixo da pasta 'sample_data' (na raiz).**
 3. **Cole e Rode:** Cole o código acima em uma célula e aperte o botão de play.
 
 **Guia de Cores:** O sistema vai te avisar de cada etapa com ícones e tempo de execução. Se faltar algum arquivo, ele vai te dar um alerta claro em vermelho!
