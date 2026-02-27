@@ -38,9 +38,11 @@ run_step("Dependências do Sistema (FFmpeg/Chromium)", "sudo apt-get install -y 
 run_step("Bibliotecas Python GPU", "pip install onnxruntime-gpu vosk pydub rembg mediapipe moviepy opencv-python numpy Pillow")
 
 # 2. DOWNLOAD DO PROJETO E MODELO
+os.chdir('/content') # Garante que estamos na raiz do Colab
 if not os.path.exists("SatiroAiKwai"):
     run_step("Download do Código (GitHub)", "git clone https://github.com/noviso123/SatiroAiKwai.git")
-%cd SatiroAiKwai
+
+%cd /content/SatiroAiKwai
 
 if not os.path.exists("scripts/ai/model"):
     run_step("Download Modelo Vosk PT-BR", "mkdir -p scripts/ai/model && wget -q https://alphacephei.com/vosk/models/vosk-model-small-pt-0.3.zip && unzip -q vosk-model-small-pt-0.3.zip && mv vosk-model-small-pt-0.3/* scripts/ai/model/ && rm -rf vosk-model-small-pt-0.3.zip vosk-model-small-pt-0.3")
